@@ -28,7 +28,7 @@ module.exports = {
 
     listarPorMed: async (req,res) =>{
         try {
-            console.log('ejecutando listarPorMed de medicos')
+            console.log('ejecutando listarPorMed de medicos ' + req.params.idMedico)
             res.json({
                 message: "endpoint listarPorMed para el medico: " + req.params.idMedico
             })

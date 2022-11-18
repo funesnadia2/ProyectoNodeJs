@@ -29,7 +29,7 @@ module.exports = {
 
     listarPorTrat: async (req,res) =>{
         try {
-            console.log('ejecutando listarPorTrat de tratamientos')
+            console.log('ejecutando listarPorTrat de tratamientos ' + req.params.idTratamiento)
             res.json({
                 message: "endpoint listarPorTrat para el tratamiento: " + req.params.idTratamiento
             })
