@@ -1,42 +1,121 @@
 // controlador de pacientes
 
+const errors = require('../const/errors')
+const models = require('../database/models/index')
 module.exports = {
-    listarTodos: async (req,res) =>{
+    listarTodos: async (req, res, next) => {
         try {
-            console.log('ejecutando listar todos los pacientes')
-            res.json({
-                message: "endpoint listarTodos los pacientes"
-            })
-        } catch (error) {
-            console.log(error)
-            
-        }
+            const pacs = await models.paciente.findAll()
 
+            res.json({
+                succes: true,
+                data: {
+                    pacientes: pacs
+                }
+            }
+            )
+        } catch (err) {
+            return next(err)
+        }
     },
 
-    crear: async (req,res) =>{
+    crear: async (req, res, next) => {
         try {
-            console.log('ejecutando crear paciente')
-            res.json({
-                message: "endpoint crear paciente"
+            const paciente = await models.paciente.create(req.body)
+            const relacion = await models.paciente_medico.create({
+                pacienteId: paciente.id,
+                medicoId: req.body.medicoId
             })
-        } catch (error) {
-            console.log(error)
-            
+            res.json({
+                succes: true,
+                data: {
+                    id: paciente.id
+                }
+            }
+            )
+        } catch (err) {
+            return next(err)
         }
-        
     },
 
-    listarPorPaciente: async (req,res) =>{
+    listarPorPaciente: async (req, res, next) => {
         try {
-            console.log('ejecutando listarPorPaciente de pacientes ' + req.params.idPaciente)
-            res.json({
-                message: "endpoint listarPorPaciente para el paciente: " + req.params.idPaciente
+            const pac = await models.paciente.findOne({
+                where: {
+                    id: req.params.idPaciente
+                },
+                include: [{
+                    model: models.paciente_medico,
+                    include: [{
+                        model: models.medico
+                    }
+                    ]
+                }
+                ]
             })
-        } catch (error) {
-            console.log(error)
-            
+            if (!pac) return next(errors.PacienteInexistente)
+            res.json({
+                succes: true,
+                data: {
+                    paciente: pac
+                }
+            }
+            )
+        } catch (err) {
+            return next(err)
         }
-        
+    },
+
+    actualizarPac: async (req, res, next) => {
+        try {
+            const pacModif = await models.paciente.update({
+                nombre: req.body.nombre,
+                apellido: req.body.apellido
+            }, {
+                where: {
+                    id: req.params.idPaciente
+                }
+            })
+
+            const pac = await models.paciente.findOne({
+                where: {
+                    id: req.params.idPaciente
+                }
+            })
+            if (!pac) return next(errors.PacienteInexistente)
+            res.json({
+                succes: true,
+                data: {
+                    message: 'Paciente actualizado'
+                }
+            }
+            )
+        } catch (err) {
+            return next(err)
+        }
+    },
+    eliminarPaciente: async (req, res, next) => {
+        try {
+            const pac = await models.paciente.findOne({
+                where: {
+                    id: req.params.idPaciente
+                }
+            })
+            if (!pac) return next(errors.PacienteInexistente)
+            await models.paciente.destroy({
+                where: {
+                    id: req.params.idPaciente
+                }
+            })
+            res.json({
+                succes: true,
+                data: {
+                    message: 'Paciente Eliminado'
+                }
+            }
+            )
+        } catch (err) {
+            return next(err)
+        }
     },
 }

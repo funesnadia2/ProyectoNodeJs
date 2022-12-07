@@ -1,0 +1,10 @@
+// para configurar nuestra base de datos
+
+const path = require('path')  // para trabajar con rutas
+
+module.exports = {
+    "config": path.resolve("./src/database/config", "config.js"), //configura la ruta del archivo de conf de la bd 
+    "models-path": path.resolve("./src/database/models"),         //configura la ruta de los modelos de la bd
+    "seeders-path": path.resolve("./src/database/seeders"),       //configura la ruta de los seeders de la bd
+    "migrations-path": path.resolve("./src/database/migrations"), //configura la ruta de las migraciones de la bd
+}
