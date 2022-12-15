@@ -26,6 +26,10 @@ module.exports = (sequelize,DataTypes) => {
         edad: {
             type: DataTypes.INTEGER
         },
+        password: {
+            type: DataTypes.STRING,
+            alowNull: false
+        },
         createdAt:{//fecha de creacion
             type: DataTypes.DATE,
             field: 'created_at',
@@ -48,8 +52,6 @@ module.exports = (sequelize,DataTypes) => {
     }) 
 
     Paciente.associate = models => {
-        //Paciente.belongsTo(models.medico)  // un paciente pertenece a un medico
-        //Paciente.hasMany(models.tratamiento)  // un paciente tiene muchos tratamientos
         Paciente.hasMany(models.paciente_medico)
     }
 

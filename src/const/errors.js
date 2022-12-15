@@ -22,5 +22,20 @@ module.exports ={
     'TratamientoInexistente':{
         code:2002,
         message: 'No existe el tratamiento ingresado'
+    },
+
+    'CredencialesInvalidas':{
+        code:3000,
+        message: 'email o passwrord invalidos'
+    },
+
+    'SesionExpirada' :{
+        code:4000,
+        message: 'Sesion expirada'
+    },
+
+    'PacienteNoAutorizado' :{
+        code:5000,
+        message: 'Paciente No Autorizado'
     }
 }

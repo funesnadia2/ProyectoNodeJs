@@ -16,7 +16,7 @@ module.exports = {
       }),
       models.tratamiento.findOrCreate({
         where:{
-          id:"5"
+          id:"7"
         },
         defaults:{
           descripcion:"ecografia ginecologica",
@@ -25,7 +25,7 @@ module.exports = {
       }),
       models.tratamiento.findOrCreate({
         where:{
-          id:"6"
+          id:"8"
         },
         defaults:{
           descripcion:"ecografia de brazo",

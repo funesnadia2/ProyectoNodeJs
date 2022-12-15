@@ -2,10 +2,13 @@
 
 const errors = require('../const/errors')
 const models = require('../database/models/index')
+const bcrypt = require('bcryptjs') //dependencia para encriptar contraseña
 module.exports = {
     listarTodos: async (req, res, next) => {
         try {
-            const pacs = await models.paciente.findAll()
+            const pacs = await models.paciente.findAll({
+                attributes:{exclude:"password"}   //para no mostrar la pass
+            })
 
             res.json({
                 succes: true,
@@ -21,6 +24,7 @@ module.exports = {
 
     crear: async (req, res, next) => {
         try {
+            req.body.password = bcrypt.hashSync(req.body.password,10)
             const paciente = await models.paciente.create(req.body)
             const relacion = await models.paciente_medico.create({
                 pacienteId: paciente.id,
@@ -44,6 +48,7 @@ module.exports = {
                 where: {
                     id: req.params.idPaciente
                 },
+                attributes:{exclude:"password"}, //para no mostrar la pass
                 include: [{
                     model: models.paciente_medico,
                     include: [{
@@ -70,7 +75,9 @@ module.exports = {
         try {
             const pacModif = await models.paciente.update({
                 nombre: req.body.nombre,
-                apellido: req.body.apellido
+                apellido: req.body.apellido,
+                email:req.body.email,
+                password: bcrypt.hashSync(req.body.password,10)
             }, {
                 where: {
                     id: req.params.idPaciente
